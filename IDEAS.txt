@@ -1,0 +1,89 @@
+IDEAS
+
+Dog Walking App 
+    
+    Walkers have many Dogs & Dogs have many Walkers through Walks
+    Dogs belong to an Owner & An Owner can have many Dogs
+
+    Dog
+        Name
+        Breed
+        Age
+        Notes
+    
+    Walker
+        Name
+        Experience
+        Bio
+        Ratings
+
+    Walk
+        dog_id [[what about multiple dogs on one walk!?]]
+        (owner_id)?
+        walker_id
+        Date
+        Time
+        Length
+        Status (Upcoming, In Progress, Complete)
+        Recurring (T/F)
+
+
+    MVP
+        Walker
+            - Has: Name, Experience, Avg Rating
+          - Randomnly assigned walks  
+          - Start Walk  (Walker)
+          - Finish Walk (Walker)
+        
+        OWNER 
+            - Has: Name, Phone
+            Request Walk (randomly assign walker)
+            Cancel Walk 
+            Rate a walk (which relates to walker)
+
+        Dog
+            Has: Name, Breed, Age, Owner_id
+
+        Walk
+            Has: Dog_id, Walker_id, Date, Time, Price, Length, Status (Upcoming, In Progress, Complete)
+
+      
+
+
+    Extra Funcitonality 
+        Assign walkers based on rating
+        Sounds
+            - Start walk
+            - Poo / Pee
+            - Complete walk
+        Login Page
+        Walker
+            -View Upcoming Walks (for User and Walker)
+            -Accept walk
+            -Assign based on rating
+        Walk
+            - Recurring (boolean)
+        Login page
+        Mark Pee (Walker)
+        Mark Poo (Walker)
+        GUI
+        Leave Tip (Owner)
+
+    As a Walker I should be able...
+     - To accept a walk
+     - To view past Walks
+     - To view upcoming Walks
+     - To view dogs I've walked
+     - Cancel a walk
+
+
+    As an Owner
+    - Request a walk
+    - Update my dog's profile
+    - Cancel a walk
+    - Specifty the walker I want for my walk
+    - Rate a walker / walk 
+
+        
+
+
