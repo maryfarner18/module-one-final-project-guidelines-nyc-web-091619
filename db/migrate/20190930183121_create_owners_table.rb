@@ -3,6 +3,7 @@ class CreateOwnersTable < ActiveRecord::Migration[5.2]
     create_table :owners do |t|
       t.string :name
       t.string :address
+      t.timestamps
     end
   end
 end
