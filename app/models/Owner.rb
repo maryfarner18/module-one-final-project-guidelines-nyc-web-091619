@@ -1,4 +1,4 @@
-class Owner << ActiveRecord::Base
+class Owner < ActiveRecord::Base
     has_many :dogs
 
     def upcoming_walks(dog)

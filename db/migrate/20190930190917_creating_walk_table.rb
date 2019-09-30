@@ -5,8 +5,7 @@ class CreatingWalkTable < ActiveRecord::Migration[5.2]
       t.integer :walker_id
       t.datetime :date
       t.datetime :time
-      t.decimal :price
-      t.decimal :length
+      t.integer :length
       t.string :status
       t.decimal :rating
     end
