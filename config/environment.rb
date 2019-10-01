@@ -3,15 +3,20 @@ require "sinatra/activerecord"
 require 'pry'
 require "tty-prompt"
 require 'csv'
-require_relative "../app/models/Dog.rb"
-require_relative "../app/models/Owner.rb"
-require_relative "../app/models/Walk.rb"
-require_relative "../app/models/Walker.rb"
+require_relative "../bin/helpers.rb"
+require_relative "../app/models/dog.rb"
+require_relative "../app/models/owner.rb"
+require_relative "../app/models/walk.rb"
+require_relative "../app/models/walker.rb"
+
+
 
 Bundler.require
 
-prompt = TTY::Prompt.new
+
 ActiveRecord::Base.establish_connection(adapter: 'sqlite3', database: 'db/development.db')
 
+old_logger = ActiveRecord::Base.logger
+ActiveRecord::Base.logger = nil
 
 

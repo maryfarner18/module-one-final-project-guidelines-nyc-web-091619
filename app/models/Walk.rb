@@ -2,12 +2,30 @@ class Walk < ActiveRecord::Base
     belongs_to :dog
     belongs_to :walker
 
+    #dog
+    #walker
+    def is_valid
+        self.status != "Cancelled"
+    end
+
     def assign_walker
-        while do
-            id = rand(Walker.all.count) + 1
-            #check if walker(id) is free at walk.date_and_time
+        assigned_walker = nil
+        for i in Walker.all do 
+            check_walker = Walker.all.sample
+            binding.pry
+            if check_walker.is_free?(date_and_time, length)
+                assigned_walker = check_walker
+                break
+            end
         end
-        
+        if assigned_walker
+            update(walker_id: assigned_walker.id)
+            update(status: "Upcoming")
+        else 
+            puts "Sorry we couldn't find a walker!"
+        end
+        self
+       
     end
 
     def start
