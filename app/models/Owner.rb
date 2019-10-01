@@ -1,7 +1,7 @@
 class Owner < ActiveRecord::Base
     has_many :dogs
 
-    #dogs
+    #returns an array of the owner's dogs' names
     def pretty_dogs
         dogs.map {|dog| dog.name}
     end
@@ -10,16 +10,17 @@ class Owner < ActiveRecord::Base
         new_walk = Walk.create(dog_id: dog.id, date_and_time: date_time, length: length, status: "Requested")
         new_walk.assign_walker
         new_walk
-        # Time.new(YYYY, MM, DD, HH, MM, SS)
     end
 
+    ## UPDATING WALKS -------------------------------
     def rate_walk(walk, rating)
         walk.update(rating: rating)
 
         old_rating =  walk.walker.average_rating
         if old_rating
             old_rating += rating
-            old_rating /= 2
+            old_rating /= 2.00
+            old_rating = old_rating.round(2) 
             walk.walker.update(average_rating: old_rating)
         else
             walk.walker.update(average_rating: rating)
@@ -28,6 +29,18 @@ class Owner < ActiveRecord::Base
 
     def cancel_walk(walk)
         walk.update(status: "Cancelled")
+    end
+
+    ### GETTING WALK INFO ------------------------------------###
+    def pretty_walks(walk_array)
+        walk_array.map do |walk| 
+            month = walk.date_and_time.month
+            day = walk.date_and_time.day
+            year = walk.date_and_time.year
+            # hours = walk.date_and_time.hour
+            # minutes = walk.date_and_time.mins
+            "##{walk.id}: #{walk.length} minute walk for #{walk.dog.name} on #{Date::MONTHNAMES[month]} #{day}, #{year}" #with #{walk.walker.name
+        end
     end
 
     def walks 

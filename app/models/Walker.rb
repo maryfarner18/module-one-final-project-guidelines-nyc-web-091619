@@ -18,6 +18,24 @@ class Walker < ActiveRecord::Base
         walk.update(status: "Complete") if walk.status == "In Progress"
     end
 
+    def upcoming_walks
+        walks.select do |walk|
+            walk.date_and_time > Time.now.utc
+        end
+    end
+
+    def past_walks
+        walks.select do |walk|
+            walk.date_and_time + (walk.length * 60) < Time.now.utc
+        end   
+    end
+
+    def walks_in_progress
+        walks.find do |walk|
+            walk.date_and_time <= Time.now.utc && walk.date_and_time + (walk.length * 60) >= Time.now.utc
+        end  
+    end
+
 
     def is_free?(date_and_time, length)
         buffer = 1800

@@ -3,6 +3,7 @@ require "sinatra/activerecord"
 require 'pry'
 require "tty-prompt"
 require 'csv'
+require 'date'
 require_relative "../bin/helpers.rb"
 require_relative "../app/models/dog.rb"
 require_relative "../app/models/owner.rb"

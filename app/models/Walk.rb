@@ -8,6 +8,13 @@ class Walk < ActiveRecord::Base
         self.status != "Cancelled"
     end
 
+    def pretty_date
+        
+    end
+
+    def pretty_time
+    end
+
     def assign_walker
         assigned_walker = nil
         for i in Walker.all do 
