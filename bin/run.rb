@@ -28,13 +28,15 @@ if user_type == "Owner"
     while !ex do 
         options = ["See my dogs", "Request a walk", "Rate a walk", "Cancel a walk", "See walks currently in progress", "See Upcoming Walks", "See past walks", "Exit"]
         action = prompt.select("What would you like to do?", options)
+        system "clear"
 
         case action
         when options[0] #see dogs
-            puts owner.pretty_dogs.join("\n")
+            puts "Your doggos:\n"
+            puts pretty_dogs(owner.dogs).join("\n")
 
         when options[1] #request walk
-            doggo = prompt.select('Which of your dogs needs a walk?', owner.pretty_dogs)
+            doggo = prompt.select('Which of your dogs needs a walk?', pretty_dogs(owner.dogs))
             date = prompt.ask("What date? (YYYY-MM-DD)"){|q| q.validate /\d{4}-[0-1][0-2]-[0-3][0-9]\z/, 'Please enter a valid date'}
             time = prompt.ask("What time? (HH:MM)"){|q| q.validate /[01][0-9]:[0-5][0-9]\z/, 'Please enter a valid time'}
             ampm = prompt.select('AM or PM?', %w(AM PM))
@@ -45,15 +47,20 @@ if user_type == "Owner"
             puts "Great, your walk for #{doggo} is scheduled for e#{date} at #{time} with #{walk.walker.name}!"
 
         when options[2] #rate walk
-            response = prompt.select('Which walk would you like to rate?', owner.pretty_walks(owner.past_walks))
-            rate_walk_id = response.split(/[#:]/)[1].to_i
-            rate_walk = Walk.find(rate_walk_id)
-            this_rating = prompt.ask("Great, what would you like to rate this walk? (1-5)"){|q| q.validate /[1-5].?[0-9]?[0-9]?\z/, 'Please enter a valid rating between 1 and 5'}
-            rate_walk.update(rating: this_rating)
+            if owner.past_walks != []
+                response = prompt.select('Which walk would you like to rate?', pretty_walks(owner.past_walks))
+                rate_walk_id = response.split(/[#:]/)[1].to_i
+                rate_walk = Walk.find(rate_walk_id)
+                this_rating = prompt.ask("Great, what would you like to rate this walk? (1-5)"){|q| q.validate /[1-5].?[0-9]?[0-9]?\z/, 'Please enter a valid rating between 1 and 5'}
+                rate_walk.update(rating: this_rating)
+                puts "Your walks has been rated!"
+            else
+                puts "Sorry, you have no past walks to rate!"
+            end
         
         when options[3] #cancel walk
-            walk_to_cancel = prompt.select("Which of the walks you want to cancel?", owner.pretty_walks(owner.upcoming_walks))
-            if walk_to_cancel
+            if owner.upcoming_walks != []
+                walk_to_cancel = prompt.select("Which of the walks you want to cancel?", pretty_walks(owner.upcoming_walks))
                 id = walk_to_cancel.split(/[#:]/)[1].to_i
                 owner.cancel_walk(Walk.find(id))
                 puts "Great, your walk for #{Walk.find(id).dog.name} was cancelled!"
@@ -62,17 +69,32 @@ if user_type == "Owner"
             end
 
         when options[4] #see in progress
-            puts owner.pretty_walks(owner.walks_in_progress).split("\n")
+            if(owner.walks_in_progress == [])
+                puts "No walks in progress!"
+            else
+                puts "In Progress Walks:"
+                puts pretty_walks(owner.walks_in_progress).split("\n")
+            end
 
         when options[5] #see upcoming
-            puts owner.pretty_walks(owner.upcoming_walks).split("\n")
+            if(owner.upcoming_walks == [])
+                puts "No upcoming walks!"
+            else
+                puts "Upcoming Walks:"
+                puts pretty_walks(owner.upcoming_walks).split("\n")
+            end
 
         when options[6] #see past
-            puts owner.pretty_walks(owner.past_walks).split("\n")
+            if(owner.past_walks == [])
+                puts "No past walks!"
+            else
+                puts "Past Walks:"
+                puts pretty_walks(owner.past_walks).split("\n")
+            end
 
         when options[7] #exit
             system "clear"
-            puts "Woof woof! Goodbye!"
+            puts "\n\n\n\n\nWoof woof! Goodbye!\n\n\n\n\n"
             ex = true
             
         end
@@ -106,6 +128,12 @@ if(user_type == "Walker")
         
         case action
         when options[0] #current walk
+            if(walker.walks_in_progress == [])
+                puts "No walks in progress!"
+            else
+                puts "In Progress Walks:"
+                puts pretty_walks(owner.walks_in_progress).split("\n")
+            end
         when options[1] #start walk
         when options[2] #end walk
         when options[3] #cancel walk

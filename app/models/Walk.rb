@@ -2,19 +2,10 @@ class Walk < ActiveRecord::Base
     belongs_to :dog
     belongs_to :walker
 
-    #dog
-    #walker
-    def is_valid
-        self.status != "Cancelled"
-    end
+    #dog - returns the dog on this walk
+    #walker - returns the walker on this walk
 
-    def pretty_date
-        
-    end
-
-    def pretty_time
-    end
-
+    #assigns a walker randomly to this walk
     def assign_walker
         assigned_walker = nil
         for i in Walker.all do 
@@ -35,9 +26,8 @@ class Walk < ActiveRecord::Base
        
     end
 
-    def start
-    end
-
-    def end_walk
+    #makes sure that the walk isn't cancelled 
+    def is_valid
+        self.status != "Cancelled"
     end
 end
