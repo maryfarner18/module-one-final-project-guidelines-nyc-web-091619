@@ -16,6 +16,7 @@ class Walker < ActiveRecord::Base
             walk_to_cancel = prompt.select("Which of the walks you want to cancel?", upcoming)
             id = walk_to_cancel.split(/[#:]/)[1].to_i
             Walk.find(id).update(status: "Cancelled")
+            Walk.find(id).save
             Walker.reload
             puts "Great, your walk for #{Walk.find(id).dog.name} was cancelled!"
         else

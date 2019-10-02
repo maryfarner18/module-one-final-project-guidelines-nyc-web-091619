@@ -39,10 +39,10 @@ class Owner < ActiveRecord::Base
             rating = prompt.ask("Great, what would you like to rate this walk? (1-5)"){|q| q.validate /[1-5].?[0-9]?[0-9]?\z/, 'Please enter a valid rating between 1 and 5'}
             walk.update(rating: rating)
             puts "Your walks has been rated!"
-
+            
             old_rating =  walk.walker.average_rating
             if old_rating
-                old_rating += rating
+                old_rating += rating.to_f
                 old_rating /= 2.00
                 old_rating = old_rating.round(2) 
                 walk.walker.update(average_rating: old_rating)
@@ -71,16 +71,16 @@ class Owner < ActiveRecord::Base
     def walks(status)
         case status
         when "All"
-            dogs.map {|dog| dog.walks}.flatten
+            self.dogs.map {|dog| dog.walks}.flatten
 
         when "Upcoming"
-            walks("All").select do |walk|
+            walks("All").select do |walk| 
                 walk.status == "Upcoming"
             end
 
         when "Past"
             walks("All").select do |walk|
-                walk.date_and_time + (walk.length * 60) < Time.now.utc
+                walk.status == "Complete"
             end 
 
         when "In Progress"
