@@ -7,6 +7,7 @@ require 'date'
 require_relative "../app/helpers.rb"
 require_relative "../app/start.rb"
 require_relative "../app/exit.rb"
+require_relative "../app/signup.rb"
 require_relative "../app/models/dog.rb"
 require_relative "../app/models/owner.rb"
 require_relative "../app/models/walk.rb"

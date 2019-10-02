@@ -50,7 +50,7 @@ class Owner < ActiveRecord::Base
                 walk.walker.update(average_rating: rating)
             end
         else
-            # puts "Sorry, you have no past walks to rate!"
+            puts "Sorry, you have no past walks to rate!"
         end
     end
 
@@ -63,7 +63,7 @@ class Owner < ActiveRecord::Base
             Walk.find(id).update(status: "Cancelled")
             puts "Great, your walk for #{Walk.find(id).dog.name} was cancelled!"
         else
-            # puts "Sorry, you don’t have any upcoming walks!!!"
+            puts "Sorry, you don’t have any upcoming walks!!!"
         end
     end
 
@@ -75,7 +75,7 @@ class Owner < ActiveRecord::Base
 
         when "Upcoming"
             walks("All").select do |walk|
-                walk.date_and_time > Time.now.utc && walk.status != "Cancelled"
+                walk.status == "Upcoming"
             end
 
         when "Past"
@@ -84,8 +84,8 @@ class Owner < ActiveRecord::Base
             end 
 
         when "In Progress"
-            walks("All").select do |walk|
-                walk.date_and_time <= Time.now.utc && walk.date_and_time + (walk.length * 60) >= Time.now.utc
+            walks("All").find do |walk|
+                walk.status == "In Progress"
             end  
 
         end
@@ -93,7 +93,7 @@ class Owner < ActiveRecord::Base
 
     def walks_in_progress
         in_prog = walks("In Progress")
-        if( in_prog == [])
+        if( in_prog == nil)
             puts "No walks in progress!"
         else
             puts "In Progress Walks:"
@@ -104,7 +104,7 @@ class Owner < ActiveRecord::Base
     def upcoming_walks
         upcoming = walks("Upcoming")
         if( upcoming == [])
-            puts "No upcoming walks!"
+            "No upcoming walks!"
         else
             pretty_walks(upcoming).split("\n")
         end
@@ -113,7 +113,7 @@ class Owner < ActiveRecord::Base
     def past_walks
         past = walks("Past")
         if(past == [])
-            puts "No past walks!"
+            "No past walks!"
         else
             pretty_walks(past).split("\n")
         end

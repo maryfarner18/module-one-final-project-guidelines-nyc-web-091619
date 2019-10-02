@@ -9,51 +9,71 @@ class Walker < ActiveRecord::Base
     #walks
     #avg_rating
 
-    def cancel_walk(walk)
+    def cancel_walk
         prompt= TTY::Prompt.new
-
-        walk.update(status: "Cancelled") if walk.status != "Completed" && walk.status != "In Progress"
-        #talk
+        upcoming = self.upcoming_walks
+        if upcoming != "No upcoming walks!"
+            walk_to_cancel = prompt.select("Which of the walks you want to cancel?", upcoming)
+            id = walk_to_cancel.split(/[#:]/)[1].to_i
+            Walk.find(id).update(status: "Cancelled")
+            puts "Great, your walk for #{Walk.find(id).dog.name} was cancelled!"
+        else
+            puts "Sorry, you don’t have any upcoming walks!!!"
+        end
     end
 
-    def start_walk(walk)
+    def start_walk
         prompt= TTY::Prompt.new
-
-        walk.update(status: "In Progress") if walk.status == "Upcoming"
-        #talk
+        upcoming = self.upcoming_walks
+        if upcoming != "No upcoming walks!"
+            walk_to_update = prompt.select("Which of the walks you want to start?", upcoming)
+            id = walk_to_update.split(/[#:]/)[1].to_i
+            Walk.find(id).update(status: "In Progress")
+            puts "Great, your walk with #{Walk.find(id).dog.name} has started!"
+        else
+            puts "Sorry, you don’t have any scheduled walks!!!"
+        end
     end
 
-    def finish_walk(walk)
+    def finish_walk
         prompt= TTY::Prompt.new
-
-        walk.update(status: "Complete") if walk.status == "In Progress"
-        #talk
+        current = self.current_walk
+        if current != "No walk in progress!"
+            walk_to_update = prompt.select("Which of the walks you want to finish?", current)
+            id = walk_to_update.split(/[#:]/)[1].to_i
+            Walk.find(id).update(status: "Complete")
+            puts "Great, your walk with #{Walk.find(id).dog.name} has finished!"
+        else
+            puts "Sorry, you don’t have any active walks!!!"
+        end
     end
 
     def upcoming_walks
-        walks.select do |walk|
-            walk.date_and_time > Time.now.utc
+        upcoming = self.walks.select{|walk| walk.status == "Upcoming"}
+        if( upcoming == [])
+            "No upcoming walks!"
+        else
+            pretty_walks(upcoming).split("\n")
         end
-        #talk
-
     end
 
     def past_walks
-        walks.select do |walk|
-            walk.date_and_time + (walk.length * 60) < Time.now.utc
-        end 
-        #talk  
+        past = self.walks.select{|walk| walk.status == "Complete"}
+        if(past == [])
+            "No past walks!"
+        else
+            pretty_walks(past).split("\n")
+        end
     end
 
     def current_walk
         current = walks.find do |walk|
-            walk.date_and_time <= Time.now.utc && walk.date_and_time + (walk.length * 60) >= Time.now.utc
+            walk.date_and_time <= Time.now.utc && walk.date_and_time + (walk.length * 60) >= Time.now.utc && walk.status == "In Progress"
         end  
-        if(current == [])
-            puts "No walks in progress!"
+        if(current == nil)
+            "No walk in progress!"
         else
-            puts "In Progress Walks:"
-            puts pretty_walks(current).split("\n")
+            pretty_walks(current).split("\n")
         end
         
     end

@@ -1,5 +1,5 @@
 require_relative '../../config/environment'
-
+  
 class User < ActiveRecord::Base
     belongs_to :owner
     belongs_to :walker
@@ -62,12 +62,13 @@ class User < ActiveRecord::Base
 
         loop do 
 
-            options = ["See current walk", "Start a Walk", "End a Walk", "Cancel A Walk", "See Upcoming Walks", "Exit"]
+            options = ["See current walk", "Start a Walk", "End a Walk", "Cancel A Walk", "See Upcoming Walks", "See Past Walks", "Exit"]
             action = prompt.select("What would you like to do?", options, per_page: 10)
-            
+             
             case action
             when options[0] #current walk
-                walker.current_walk
+                puts "Current Walks:"
+                puts walker.current_walk
                
             when options[1] #start walk
                 walker.start_walk
@@ -79,9 +80,14 @@ class User < ActiveRecord::Base
                 walker.cancel_walk
 
             when options[4] #upcoming walks
-                walker.upcoming_walks
+                puts "Upcoming Walks:"
+                puts walker.upcoming_walks
                 
-            when options[5] #exit
+            when options[5] #past walks
+                puts "Past Walks:"
+                puts walker.past_walks
+                
+            when options[6] #exit
                 exit_app
                 return
             end
