@@ -21,7 +21,7 @@ GEM
     i18n (1.6.0)
       concurrent-ruby (~> 1.0)
     method_source (0.9.2)
-    minitest (5.12.2)
+    minitest (5.11.3)
     mustermann (1.0.3)
     necromancer (0.5.0)
     pastel (0.7.3)
@@ -80,6 +80,7 @@ PLATFORMS
 DEPENDENCIES
   activerecord (~> 5.2.3)
   database_cleaner
+  minitest (= 5.11.3)
   necromancer (~> 0.5.0)
   pastel (~> 0.7.3)
   pry

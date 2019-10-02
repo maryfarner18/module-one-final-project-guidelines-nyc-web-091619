@@ -3,7 +3,8 @@ class CreatingWalkerTable < ActiveRecord::Migration[5.2]
     create_table :walkers do |t|
       t.string :name
       t.integer :experience
-      t.decimal :average_rating
+      t.float :average_rating
+      t.integer :user_id
       t.timestamps
     end
   end

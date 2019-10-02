@@ -3,11 +3,10 @@ class CreatingWalkTable < ActiveRecord::Migration[5.2]
     create_table :walks do |t|
       t.integer :dog_id
       t.integer :walker_id
-      t.datetime :date
-      t.datetime :time
+      t.datetime :date_and_time
       t.integer :length
       t.string :status
-      t.decimal :rating
+      t.float :rating
     end
   end
 end

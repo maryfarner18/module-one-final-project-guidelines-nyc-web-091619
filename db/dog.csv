@@ -1,22 +1,22 @@
 Name,Breed,Age,Notes,Owner_id,Gender
 Oberon, Vizsla, 3.5, The best dog ever, 1, male
-Tori, Pommeranian, .33, He's from Russia, 2, male
+Tori, Pommeranian, 0.5, He's from Russia, 2, male
 Spot, Golden Retriever, 6, The best dog ever, 18, male
 Fido, Chocolate Labrador, 2, Like to eat trash on the street, 14, male
-Nemo, Bull Dog, 3.25, Is scared of fire hydrants, 3, male
+Nemo, Bull Dog, 3, Is scared of fire hydrants, 3, male
 Dock, Newfoundland, 13, Loves to swim - watch him around puddles and ponds, 4, male
-Bernie, Black Labrador, .42, Chews on everything, 5, male
-Ethyl, Newfoundland, 12, Gets tired - don't get too far from home, 12, female
-Birdie, Pitt Bull, 4.25, Very lazy. Loves other dogs but can be a bit shy., 12, female
+Bernie, Black Labrador, 0.5, Chews on everything, 5, male
+Ethyl, Newfoundland, 12.5, Gets tired - don't get too far from home, 12, female
+Birdie, Pitt Bull, 4, Very lazy. Loves other dogs but can be a bit shy., 12, female
 Grady, Vizsla, 7, Can have leash aggression occasionally, 10, male
-Dora, Wirehaired Pointing Gryffon, 6.8, Will attack other dogs. Steer clear and you should be fine, 11, female
-Edie, Wirehaired Pointing Gryffon, 3.5, Loves to look out the window. Be sure to leave her a full bowl of water, 9, female
-Hobbes, Boxer, 11, Such a sweetie. Gentle with kids, great with everyone, 16, male
-Frannie, Cocker Spaniel, 8.75, Frannie is blind. She does fine walking, but you may have to guide her a little, 6, female
-Winnie, Cocker Spaniel, 2.25, Jumps on people she meets. Reprimand her with off!, 6, female
-DoDo, French Bulldog, 3.5, Not the smartest ever. , 8, male
-Nacho, French Bulldog, 6.25, Will eat chicken bones off the street. Watch him, 15, male
-Mini, Great Dane, 2.75, Allergic to peanuts, 13, female
-Lola, Greyhound, 10, A very gentle giant. Scared of children, 9, female
+Dora, Wirehaired Pointing Gryffon, 6, Will attack other dogs. Steer clear and you should be fine, 11, female
+Edie, Wirehaired Pointing Gryffon, 3, Loves to look out the window. Be sure to leave her a full bowl of water, 9, female
+Hobbes, Boxer, 11.0, Such a sweetie. Gentle with kids, great with everyone, 16, male
+Frannie, Cocker Spaniel, 8, Frannie is blind. She does fine walking, but you may have to guide her a little, 6, female
+Winnie, Cocker Spaniel, 2.5, Jumps on people she meets. Reprimand her with off!, 6, female
+DoDo, French Bulldog, 3, Not the smartest ever. , 8, male
+Nacho, French Bulldog, 6.5, Will eat chicken bones off the street. Watch him, 15, male
+Mini, Great Dane, 2, Allergic to peanuts, 13, female
+Lola, Greyhound, 10.5 A very gentle giant. Scared of children, 9, female
 Mouse, Italian Greyhound, 3, Very, very skittish, 5, male
 

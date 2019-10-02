@@ -1,3 +1,5 @@
+require_relative '../../config/environment'
+
 class Walk < ActiveRecord::Base
     belongs_to :dog
     belongs_to :walker
@@ -10,7 +12,6 @@ class Walk < ActiveRecord::Base
         assigned_walker = nil
         for i in Walker.all do 
             check_walker = Walker.all.sample
-            binding.pry
             if check_walker.is_free?(date_and_time, length)
                 assigned_walker = check_walker
                 break

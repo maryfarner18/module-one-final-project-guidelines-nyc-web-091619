@@ -3,7 +3,7 @@ class CreateDogsTable < ActiveRecord::Migration[5.2]
     create_table :dogs do |t|
       t.string :name
       t.string :breed
-      t.decimal :age
+      t.float :age
       t.string :gender
       t.text :notes
       t.integer :owner_id

@@ -10,12 +10,12 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_10_01_132219) do
+ActiveRecord::Schema.define(version: 2019_10_02_133027) do
 
   create_table "dogs", force: :cascade do |t|
     t.string "name"
     t.string "breed"
-    t.decimal "age"
+    t.float "age"
     t.string "gender"
     t.text "notes"
     t.integer "owner_id"
@@ -25,15 +25,23 @@ ActiveRecord::Schema.define(version: 2019_10_01_132219) do
 
   create_table "owners", force: :cascade do |t|
     t.string "name"
-    t.string "address"
+    t.text "address"
+    t.integer "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "users", force: :cascade do |t|
+    t.string "username"
+    t.string "password"
+    t.string "user_type"
   end
 
   create_table "walkers", force: :cascade do |t|
     t.string "name"
     t.integer "experience"
-    t.decimal "average_rating"
+    t.float "average_rating"
+    t.integer "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -44,7 +52,7 @@ ActiveRecord::Schema.define(version: 2019_10_01_132219) do
     t.datetime "date_and_time"
     t.integer "length"
     t.string "status"
-    t.decimal "rating"
+    t.float "rating"
   end
 
 end
