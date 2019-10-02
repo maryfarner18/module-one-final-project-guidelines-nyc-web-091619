@@ -9,4 +9,6 @@ dog = Dog.find(1)
 walker = Walker.find(1)
 walk = Walk.find(1)
 
+
 startup
+

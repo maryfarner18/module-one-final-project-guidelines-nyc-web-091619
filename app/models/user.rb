@@ -13,6 +13,7 @@ class User < ActiveRecord::Base
 
         ####LOOP TILL THEY CHOOSE TO EXIT! ##############
         loop do 
+            reload_all
             options = ["See my dogs", "Request a walk", "Rate a walk", "Cancel a walk", "See walks currently in progress", "See Upcoming Walks", "See past walks", "Exit"]
             action = prompt.select("What would you like to do?", options, per_page: 10)
             system "clear"
@@ -61,13 +62,14 @@ class User < ActiveRecord::Base
         puts "Welcome, #{walker.name}!"
 
         loop do 
-
+            reload_all
             options = ["See current walk", "Start a Walk", "End a Walk", "Cancel A Walk", "See Upcoming Walks", "See Past Walks", "Exit"]
             action = prompt.select("What would you like to do?", options, per_page: 10)
              
             case action
             when options[0] #current walk
                 puts "Current Walks:"
+                walker.current_walk
                 puts walker.current_walk
                
             when options[1] #start walk

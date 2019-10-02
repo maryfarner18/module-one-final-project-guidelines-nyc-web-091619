@@ -16,6 +16,7 @@ class Walker < ActiveRecord::Base
             walk_to_cancel = prompt.select("Which of the walks you want to cancel?", upcoming)
             id = walk_to_cancel.split(/[#:]/)[1].to_i
             Walk.find(id).update(status: "Cancelled")
+            Walker.reload
             puts "Great, your walk for #{Walk.find(id).dog.name} was cancelled!"
         else
             puts "Sorry, you don’t have any upcoming walks!!!"
@@ -39,8 +40,8 @@ class Walker < ActiveRecord::Base
         prompt= TTY::Prompt.new
         current = self.current_walk
         if current != "No walk in progress!"
-            walk_to_update = prompt.select("Which of the walks you want to finish?", current)
-            id = walk_to_update.split(/[#:]/)[1].to_i
+            walk = prompt.select("Which of the walks you want to finish?", current)
+            id = walk.split(/[#:]/)[1].to_i
             Walk.find(id).update(status: "Complete")
             puts "Great, your walk with #{Walk.find(id).dog.name} has finished!"
         else
@@ -67,13 +68,13 @@ class Walker < ActiveRecord::Base
     end
 
     def current_walk
-        current = walks.find do |walk|
-            walk.date_and_time <= Time.now.utc && walk.date_and_time + (walk.length * 60) >= Time.now.utc && walk.status == "In Progress"
+        current = self.walks.find do |walk|
+            walk.status == "In Progress"
         end  
         if(current == nil)
             "No walk in progress!"
         else
-            pretty_walks(current).split("\n")
+            pretty_walks([current]).split("\n")
         end
         
     end

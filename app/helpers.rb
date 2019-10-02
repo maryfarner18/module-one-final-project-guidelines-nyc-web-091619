@@ -31,4 +31,11 @@ def pretty_dogs(dogs)
     dogs.map {|dog| dog.name}
 end
 
+def reload_all
+    Walk.all.each{|walk| walk.reload}
+    Walker.all.each{|walker| walker.reload}
+    Owner.all.each{|owner| owner.reload}
+    Dog.all.each{|dog| dog.reload}
+end
+
 

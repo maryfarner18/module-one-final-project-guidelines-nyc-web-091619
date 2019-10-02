@@ -35,7 +35,7 @@ class Owner < ActiveRecord::Base
         if past != "No past walks!"
             response = prompt.select('Which walk would you like to rate?', past)
             walk_id = response.split(/[#:]/)[1].to_i
-            walk = Walk.find(rate_walk_id)
+            walk = Walk.find(walk_id)
             rating = prompt.ask("Great, what would you like to rate this walk? (1-5)"){|q| q.validate /[1-5].?[0-9]?[0-9]?\z/, 'Please enter a valid rating between 1 and 5'}
             walk.update(rating: rating)
             puts "Your walks has been rated!"
@@ -97,7 +97,7 @@ class Owner < ActiveRecord::Base
             puts "No walks in progress!"
         else
             puts "In Progress Walks:"
-            puts pretty_walks(in_prog).split("\n")
+            puts pretty_walks([in_prog]).split("\n")
         end
     end
 
