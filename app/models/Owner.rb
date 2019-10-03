@@ -55,7 +55,7 @@ class Owner < ActiveRecord::Base
             rating = prompt.ask("Great, what would you like to rate this walk? (1-5)"){|q| q.validate /[1-5].?[0-9]?[0-9]?\z/, 'Please enter a valid rating between 1 and 5'}
             walk.update(rating: rating)
             puts "Your walks has been rated!"
-            
+            `afplay ./app/audio/rate.mp3`
             old_rating =  walk.walker.average_rating
             if old_rating
                 old_rating += rating.to_f
@@ -69,6 +69,7 @@ class Owner < ActiveRecord::Base
                 User.destroy(walk.walker.user_id)
                 Walker.destroy(walk.walker.id)
                 puts "Uh Oh! Due to you low rating, #{walk.walker.name} has been fired!!!"
+                `afplay ./app/audio/embarassing.m4a`
                 animation('ashameddog', 1, 1, 0.05, 10, "")
             end
         else

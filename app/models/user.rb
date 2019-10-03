@@ -21,6 +21,7 @@ class User < ActiveRecord::Base
         animation('walkingdog', 1, 1, 0.05, 10, message)
 
         if owner.dogs == []
+            `afplay ./app/audio/hmm.m4a`
             puts "Sorry you don't have any doggos!"
             add = prompt.select("Do you want to add a dog?", %w(Yes No))
             if add == "Yes"
@@ -42,11 +43,13 @@ class User < ActiveRecord::Base
             case action
             when options[0] #see dogs
                 owner.see_my_dogs
+                `afplay ./app/audio/woof.mp3`
                 prompt.ask("Hit enter when done")
                 give_owner_options(owner)
 
             when options[1] #request walk
                 owner.request_walk
+                `afplay ./app/audio/woof.mp3`
                 prompt.ask("Hit enter when done")
                 give_owner_options(owner)
 

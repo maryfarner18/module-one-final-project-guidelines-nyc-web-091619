@@ -46,6 +46,8 @@ class Walker < ActiveRecord::Base
             id = walk.split(/[#:]/)[1].to_i
             Walk.find(id).update(status: "Complete")
             puts "Great, your walk with #{Walk.find(id).dog.name} has finished!"
+            puts "Don't forget to fill up #{Walk.find(id).dog.name}'s waterbowl!'"
+            `afplay ./app/audio/dog_drinking.mp3`
         else
             puts "Sorry, you don’t have any active walks!!!"
         end
