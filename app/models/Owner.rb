@@ -39,9 +39,8 @@ class Owner < ActiveRecord::Base
     end
 
     def see_my_dogs
-        
-        puts "Your doggos:\n"
         animation('doggo', 1, 1, 0.02, 10,"")
+        puts "Your doggos:\n"
         puts pretty_dogs(self.dogs).join("\n")
     end
 
