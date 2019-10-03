@@ -2,6 +2,7 @@ require_relative '../config/environment'
 
 def signup(type)
     prompt= TTY::Prompt.new
+
     username = nil
     loop do
         username = prompt.ask("Please enter a username:")#{|q| q.validate /\S\z/, 'Please enter a valid username(Spaces are not allowed)'}

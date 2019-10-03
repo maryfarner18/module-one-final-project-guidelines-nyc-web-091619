@@ -12,44 +12,87 @@ class Walker < ActiveRecord::Base
     def cancel_walk
         prompt= TTY::Prompt.new
         upcoming = self.upcoming_walks
+
         if upcoming != "No upcoming walks!"
-            walk_to_cancel = prompt.select("Which of the walks you want to cancel?", upcoming)
+            walk_to_cancel = prompt.select("Which of the walks you want to cancel?", upcoming << "Go Back")
+            if walk_to_cancel == "Go Back"
+                return false
+            end
             id = walk_to_cancel.split(/[#:]/)[1].to_i
             Walk.find(id).update(status: "Cancelled")
-            Walk.find(id).save
-            Walker.reload
             puts "Great, your walk for #{Walk.find(id).dog.name} was cancelled!"
+            return true
         else
             puts "Sorry, you don’t have any upcoming walks!!!"
+            prompt.ask("Hit enter when done")
+            return false
         end
     end
 
     def start_walk
         prompt= TTY::Prompt.new
+
         upcoming = self.upcoming_walks
         if upcoming != "No upcoming walks!"
-            walk_to_update = prompt.select("Which of the walks you want to start?", upcoming)
+            walk_to_update = prompt.select("Which of the walks you want to start?", upcoming << "Go Back")
+            if walk_to_update == "Go Back"
+                return false
+            end
             id = walk_to_update.split(/[#:]/)[1].to_i
             Walk.find(id).update(status: "In Progress")
             message = "\t\t\t\tGreat, your walk with #{Walk.find(id).dog.name} has started!"
-            animation('happy_dog', 5, 10, 0.02, 10, message)
+            animation('happy_dog', 2, 10, 0.05, 10, message)
+            return true
         else
             puts "Sorry, you don’t have any scheduled walks!!!"
+            prompt.ask("Hit enter when done")
+            return false
+        end
+    end
+
+    def update_avg_rating(rating)
+        old_rating =  self.average_rating
+        if old_rating
+            old_rating += rating.to_f
+            old_rating /= 2.00
+            old_rating = old_rating.round(2) 
+            self.update(average_rating: old_rating)
+        else
+            self.update(average_rating: rating)
+        end
+        if self.average_rating < 3.0 
+
+            walker_id = self.id
+            dest_walks = Walk.all.select {|walk| walk.walker_id == walker_id}
+            dest_walks.each {|walk| Walk.destroy(walk.id)}
+
+            User.destroy(self.user_id)
+            Walker.destroy(self.id)
+            puts "Uh Oh! Due to you low rating, #{self.name} has been fired!!!"
+            #play "embarassing"
+            `afplay ./app/audio/embarassing.m4a`
+            animation('ashameddog', 1, 1, 0.05, 10, "")
+            `afplay ./app/audio/embarassing.m4a`
         end
     end
 
     def finish_walk
         prompt= TTY::Prompt.new
+
         current = self.current_walk
         if current != "No walk in progress!"
-            walk = prompt.select("Which of the walks you want to finish?", current)
+            walk = prompt.select("Which of the walks you want to finish?", current << "Go Back")
+            if walk == "Go Back"
+                return false
+            end
             id = walk.split(/[#:]/)[1].to_i
             Walk.find(id).update(status: "Complete")
             puts "Great, your walk with #{Walk.find(id).dog.name} has finished!"
-            puts "Don't forget to fill up #{Walk.find(id).dog.name}'s waterbowl!'"
-            `afplay ./app/audio/dog_drinking.mp3`
+            return true
         else
             puts "Sorry, you don’t have any active walks!!!"
+            prompt.ask("Hit enter when done")
+            return false
         end
     end
 

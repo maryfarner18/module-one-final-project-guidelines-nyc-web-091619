@@ -5,8 +5,11 @@ class Owner < ActiveRecord::Base
     has_one :user
 
     def add_dogs
+        
         prompt= TTY::Prompt.new
-        while prompt.select("Do you have a dog to add?", %w(Yes No)) == "Yes"
+        puts "Add a Dog:\n"
+
+        loop do  
             dog_name = prompt.ask("Please enter your dog's name:")
             breed = prompt.ask("Please enter your dog's breed:")
             age = prompt.slider("Please enter your dog's age:", max:25, step: 0.5, default: 5, format: "|:slider| %.1f")
@@ -14,6 +17,12 @@ class Owner < ActiveRecord::Base
             notes = prompt.ask("Please enter anything we should know about your doggo:")
 
             doggo = Dog.create(name: dog_name, breed: breed, age: age, gender: gender, notes: notes, owner_id: self.id)
+            puts "#{doggo.name} had been added!"
+
+            more = prompt.select("Do you have more dogs to add?", %w(Yes No))
+            if more == "No"
+                break
+            end
         end
     end
 
@@ -21,7 +30,11 @@ class Owner < ActiveRecord::Base
     def request_walk
         prompt= TTY::Prompt.new
 
-        dog_name = prompt.select('Which of your dogs needs a walk?', pretty_dogs(self.dogs))
+        dog_name = prompt.select('Which of your dogs needs a walk?', pretty_dogs(self.dogs) << "Go Back", per_page: 10)
+        if dog_name == "Go Back"
+            return false
+        end
+    
         dog = self.dogs.find_by(name: dog_name)
         date = prompt.ask("What date? (YYYY-MM-DD)"){|q| q.validate /\d{4}-[0-1][0-2]-[0-3][0-9]\z/, 'Please enter a valid date'}
         time = prompt.ask("What time? (HH:MM)"){|q| q.validate /[01][0-9]:[0-5][0-9]\z/, 'Please enter a valid time'}
@@ -33,7 +46,7 @@ class Owner < ActiveRecord::Base
         new_walk.assign_walker
 
         message = "\t\tGreat, your walk for #{dog_name} is scheduled for #{date} at #{time} with #{new_walk.walker.name}!"
-        animation('happy_dog', 5, 10, 0.02, 10, message)
+        animation('happy_dog', 5, 10, 0.04, 10, message)
 
         new_walk
     end
@@ -47,46 +60,53 @@ class Owner < ActiveRecord::Base
     ## UPDATING WALKS -------------------------------
     def rate_walk
         prompt= TTY::Prompt.new
+
         past = self.past_walks 
         if past != "No past walks!"
-            response = prompt.select('Which walk would you like to rate?', past)
+            
+            response = prompt.select('Which walk would you like to rate?', past << "Go Back", per_page: 10)
+            if response == "Go Back"
+                return false
+            end
+
             walk_id = response.split(/[#:]/)[1].to_i
+
             walk = Walk.find(walk_id)
             rating = prompt.ask("Great, what would you like to rate this walk? (1-5)"){|q| q.validate /[1-5].?[0-9]?[0-9]?\z/, 'Please enter a valid rating between 1 and 5'}
             walk.update(rating: rating)
+
             puts "Your walks has been rated!"
+            #play "rate sound"
             `afplay ./app/audio/rate.mp3`
-            old_rating =  walk.walker.average_rating
-            if old_rating
-                old_rating += rating.to_f
-                old_rating /= 2.00
-                old_rating = old_rating.round(2) 
-                walk.walker.update(average_rating: old_rating)
-            else
-                walk.walker.update(average_rating: rating)
-            end
-            if walk.walker.average_rating < 3.0 
-                User.destroy(walk.walker.user_id)
-                Walker.destroy(walk.walker.id)
-                puts "Uh Oh! Due to you low rating, #{walk.walker.name} has been fired!!!"
-                `afplay ./app/audio/embarassing.m4a`
-                animation('ashameddog', 1, 1, 0.05, 10, "")
-            end
+
+    
+            #update the walker's rating
+            Walker.find(walk.walker_id).update_avg_rating(rating)
+
         else
             puts "Sorry, you have no past walks to rate!"
+            prompt.ask("Hit enter when done")
+            return false
         end
     end
 
     def cancel_walk
         prompt= TTY::Prompt.new
+
         upcoming = self.upcoming_walks
         if upcoming != "No upcoming walks!"
-            walk_to_cancel = prompt.select("Which of the walks you want to cancel?", upcoming)
+            walk_to_cancel = prompt.select("Which of the walks you want to cancel?", upcoming << "Go Back", per_page: 10)
+            if walk_to_cancel == "Go Back"
+                return false
+            end
             id = walk_to_cancel.split(/[#:]/)[1].to_i
             Walk.find(id).update(status: "Cancelled")
             puts "Great, your walk for #{Walk.find(id).dog.name} was cancelled!"
+            return true
         else
             puts "Sorry, you don’t have any upcoming walks!!!"
+            prompt.ask("Hit enter when done")
+            return false
         end
     end
 

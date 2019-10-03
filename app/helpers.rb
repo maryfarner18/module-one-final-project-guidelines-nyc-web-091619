@@ -16,12 +16,11 @@ end
 #prints all the walks in walk_array like
 #   #14: 30 minutes walk for Oberon on October 10, 2019
 def pretty_walks(walk_array)
+    walk_array.sort_by! {|walk| walk.date_and_time}
     walk_array.map do |walk| 
         month = walk.date_and_time.month
         day = walk.date_and_time.day
         year = walk.date_and_time.year
-        # hours = walk.date_and_time.hour
-        # minutes = walk.date_and_time.mins
         "##{walk.id}: #{walk.length} minute walk for #{walk.dog.name} on #{Date::MONTHNAMES[month]} #{day}, #{year}"
     end
 end

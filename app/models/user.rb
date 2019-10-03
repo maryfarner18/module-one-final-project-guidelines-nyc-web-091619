@@ -5,24 +5,30 @@ class User < ActiveRecord::Base
     belongs_to :walker
 
     def run_owner
-     
+        
         owner = Owner.find_by(user_id: self.id)
         message = "\t\t\t\t\t\t\tWelcome, #{owner.name}!\n"
-        animation('walkingdog', 5, 10, 0.05, 10, message)
+         #SOME NOISE
+        animation('walkingdog', 3, 10, 0.05, 10, message)
         puts "\n"
+         #SOME NOISE
 
-        give_owner_options(owner)
+        give_owner_options
     end
 
-    def give_owner_options(owner)
+    def give_owner_options
+        reload
         prompt= TTY::Prompt.new
-
+        owner = Owner.find_by(user_id: self.id)
         message = "\t\t\t\t\t\t\tWelcome, #{owner.name}!\n"
         animation('walkingdog', 1, 1, 0.05, 10, message)
+       
 
         if owner.dogs == []
-            `afplay ./app/audio/hmm.m4a`
             puts "Sorry you don't have any doggos!"
+            #play "hmmmmmmm"
+            `afplay ./app/audio/hmm.m4a`
+            
             add = prompt.select("Do you want to add a dog?", %w(Yes No))
             if add == "Yes"
                 owner.add_dogs
@@ -36,51 +42,62 @@ class User < ActiveRecord::Base
         else
 
             ####LOOP TILL THEY CHOOSE TO EXIT! ##############
-            options = ["See my dogs", "Request a walk", "Rate a walk", "Cancel a walk", "See walks currently in progress", "See Upcoming Walks", "See past walks", "Exit"]
+            options = ["See My Dogs", "Request a Walk", "See Upcoming Walks", "Rate a Walk", "See Past Walks", "Cancel a Walk", "See Walks Currently In Progress", "Add a Dog", "Exit"]
             action = prompt.select("What would you like to do?", options, per_page: 10)
             system "clear"
 
             case action
             when options[0] #see dogs
                 owner.see_my_dogs
+                #play woof
                 `afplay ./app/audio/woof.mp3`
                 prompt.ask("Hit enter when done")
-                give_owner_options(owner)
+                give_owner_options
 
             when options[1] #request walk
-                owner.request_walk
-                `afplay ./app/audio/woof.mp3`
-                prompt.ask("Hit enter when done")
-                give_owner_options(owner)
+                if owner.request_walk
+                    #play woof
+                    `afplay ./app/audio/woof.mp3` 
+                    prompt.ask("Hit enter when done")
+                end
+                give_owner_options
 
-            when options[2] #rate walk
-                owner.rate_walk
-                prompt.ask("Hit enter when done")
-                give_owner_options(owner)
+            when options[3] #rate walk
+                if owner.rate_walk
+                    prompt.ask("Hit enter when done")
+                end
+                give_owner_options
             
-            when options[3] #cancel walk
-                owner.cancel_walk
-                prompt.ask("Hit enter when done")
-                give_owner_options(owner)
+            when options[5] #cancel walk
+                if owner.cancel_walk
+                    #play SAD NOISE
+                    `afplay ./app/audio/sad_noise.mp3`
+                    prompt.ask("Hit enter when done")
+                end
+                give_owner_options
         
-            when options[4] #see in progress
+            when options[6] #see in progress
                 owner.walks_in_progress
                 prompt.ask("Hit enter when done")
-                give_owner_options(owner)
+                give_owner_options
 
-            when options[5] #see upcoming
+            when options[2] #see upcoming
                 puts "Upcoming Walks:"
                 puts owner.upcoming_walks
                 prompt.ask("Hit enter when done")
-                give_owner_options(owner)
+                give_owner_options
 
-            when options[6] #see past
+            when options[4] #see past
                 puts "Past Walks:"
                 puts owner.past_walks
                 prompt.ask("Hit enter when done")
-                give_owner_options(owner)
+                give_owner_options
 
-            when options[7] #exit
+            when options[7] #add dogs
+                owner.add_dogs
+                give_owner_options
+
+            when options[8] #exit
                 exit_app
             end
         end
@@ -89,22 +106,26 @@ class User < ActiveRecord::Base
 
 
     def run_walker
-        
+        reload
         walker = Walker.find_by(user_id: self.id)
         message = "\t\t\t\t\t\t\tWelcome, #{walker.name}!\n"
-        animation('walkingdog', 5, 10, 0.05, 10, message)
+         #SOME NOISE
+        animation('walkingdog', 3, 10, 0.05, 10, message)
         puts "\n"
+         #SOME NOISE
 
-        give_walker_options(walker)
+        give_walker_options
     end
 
-    def give_walker_options(walker)
+    def give_walker_options
+        reload
         prompt= TTY::Prompt.new
+        walker = Walker.find_by(user_id: self.id)
 
         message = "\t\t\t\t\t\t\tWelcome, #{walker.name}!\n"
         animation('walkingdog', 1, 1, 0.05, 10, message)
             
-        options = ["See current walk", "Start a Walk", "End a Walk", "Cancel A Walk", "See Upcoming Walks", "See Past Walks", "Exit"]
+        options = ["See Current Walk", "See Upcoming Walks", "Start a Walk", "End a Walk", "Cancel A Walk", "See Past Walks", "Exit"]
         action = prompt.select("What would you like to do?", options, per_page: 10)
             
         case action
@@ -113,35 +134,45 @@ class User < ActiveRecord::Base
             walker.current_walk
             puts walker.current_walk
             prompt.ask("Hit enter when done")
-            give_walker_options(walker)
+            give_walker_options
             
-        when options[1] #start walk
-            walker.start_walk
-            prompt.ask("Hit enter when done")
-            give_walker_options(walker)
+        when options[2] #start walk
+            if walker.start_walk
+                #play woof
+                `afplay ./app/audio/woof.mp3`
+                prompt.ask("Hit enter when done")
+            end
+            give_walker_options
 
-        when options[2] #end walk
-            walker.finish_walk
-            prompt.ask("Hit enter when done")
-            give_walker_options(walker)
+        when options[3] #end walk
+            if walker.finish_walk
+                puts "Don't forget to fill up #{Walk.find(id).dog.name}'s waterbowl!"
+                `afplay ./app/audio/dog_drinking.mp3`
+                `afplay ./app/audio/end_walk.mp3`
+                prompt.ask("Hit enter when done")
+            end
+            give_walker_options
 
-        when options[3] #cancel walk
-            walker.cancel_walk
-            prompt.ask("Hit enter when done")
-            give_walker_options(walker)
+        when options[4] #cancel walk
+            if walker.cancel_walk
+                #play SAD NOISE
+                `afplay ./app/audio/sad_noise.mp3`
+                prompt.ask("Hit enter when done")
+            end
+            give_walker_options
 
-        when options[4] #upcoming walks
+        when options[1] #upcoming walks
             puts "Upcoming Walks:"
             puts walker.upcoming_walks
             prompt.ask("Hit enter when done")
-            give_walker_options(walker)
+            give_walker_options
             
         when options[5] #past walks
             puts "Past Walks:"
             puts walker.past_walks
 
             prompt.ask("Hit enter when done")
-            give_walker_options(walker)
+            give_walker_options
             
         when options[6] #exit
             exit_app
