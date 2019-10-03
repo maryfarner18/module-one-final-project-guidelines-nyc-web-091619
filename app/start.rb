@@ -1,9 +1,9 @@
 require_relative '../config/environment'
 
 def startup
+    system 'clear'
     prompt= TTY::Prompt.new
     has_account = prompt.select("Hello Dog Lover, do you have an account with us?", %w(Yes No))
-
     if has_account == "Yes"
         user = nil
         loop do
@@ -21,6 +21,7 @@ def startup
             end
             puts "Incorrect username & combination. Try again"
         end 
+        
        
         
     else #else create account

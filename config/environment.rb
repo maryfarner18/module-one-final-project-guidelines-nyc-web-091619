@@ -13,7 +13,7 @@ require_relative "../app/models/owner.rb"
 require_relative "../app/models/walk.rb"
 require_relative "../app/models/walker.rb"
 require_relative "../app/models/user.rb"
-require_relative "../app/ascii/welcome_screen.rb"
+require_relative "../app/animations.rb"
 
 
 

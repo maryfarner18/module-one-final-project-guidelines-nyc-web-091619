@@ -5,6 +5,7 @@ class Owner < ActiveRecord::Base
     has_one :user
 
     def add_dogs
+        prompt= TTY::Prompt.new
         while prompt.select("Do you have a dog to add?", %w(Yes No)) == "Yes"
             dog_name = prompt.ask("Please enter your dog's name:")
             breed = prompt.ask("Please enter your dog's breed:")
@@ -31,13 +32,16 @@ class Owner < ActiveRecord::Base
         new_walk = Walk.create(dog_id: dog.id, date_and_time: date_and_time, length: length, status: "Requested")
         new_walk.assign_walker
 
-        puts "Great, your walk for #{dog_name} is scheduled for #{date} at #{time} with #{new_walk.walker.name}!"
+        message = "\t\tGreat, your walk for #{dog_name} is scheduled for #{date} at #{time} with #{new_walk.walker.name}!"
+        animation('happy_dog', 5, 10, 0.02, 10, message)
+
         new_walk
     end
 
     def see_my_dogs
         
         puts "Your doggos:\n"
+        animation('doggo', 1, 1, 0.02, 10,"")
         puts pretty_dogs(self.dogs).join("\n")
     end
 
@@ -61,6 +65,12 @@ class Owner < ActiveRecord::Base
                 walk.walker.update(average_rating: old_rating)
             else
                 walk.walker.update(average_rating: rating)
+            end
+            if walk.walker.average_rating < 3.0 
+                User.destroy(walk.walker.user_id)
+                Walker.destroy(walk.walker.id)
+                puts "Uh Oh! Due to you low rating, #{walk.walker.name} has been fired!!!"
+                animation('ashameddog', 1, 1, 0.05, 10, "")
             end
         else
             puts "Sorry, you have no past walks to rate!"

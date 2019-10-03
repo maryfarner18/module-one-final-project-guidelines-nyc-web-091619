@@ -31,7 +31,8 @@ class Walker < ActiveRecord::Base
             walk_to_update = prompt.select("Which of the walks you want to start?", upcoming)
             id = walk_to_update.split(/[#:]/)[1].to_i
             Walk.find(id).update(status: "In Progress")
-            puts "Great, your walk with #{Walk.find(id).dog.name} has started!"
+            message = "\t\t\t\tGreat, your walk with #{Walk.find(id).dog.name} has started!"
+            animation('happy_dog', 5, 10, 0.02, 10, message)
         else
             puts "Sorry, you don’t have any scheduled walks!!!"
         end

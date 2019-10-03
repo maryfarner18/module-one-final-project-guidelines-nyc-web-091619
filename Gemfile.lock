@@ -89,6 +89,7 @@ DEPENDENCIES
   rspec
   sinatra-activerecord
   sqlite3
+  tty-cursor
   tty-prompt (~> 0.19.0)
   tty-reader (~> 0.6.0)
 

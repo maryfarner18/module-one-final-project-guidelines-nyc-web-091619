@@ -1,7 +1,7 @@
 require_relative '../config/environment'
 
-puts "test away!"
+animation("sadDog", 10, 10, 0.05, 3)
 
-binding.pry
+
 
 puts "Bye bye!"
