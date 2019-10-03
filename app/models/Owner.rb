@@ -4,6 +4,19 @@ class Owner < ActiveRecord::Base
     has_many :dogs
     has_one :user
 
+    def add_dogs
+        while prompt.select("Do you have a dog to add?", %w(Yes No)) == "Yes"
+            dog_name = prompt.ask("Please enter your dog's name:")
+            breed = prompt.ask("Please enter your dog's breed:")
+            age = prompt.slider("Please enter your dog's age:", max:25, step: 0.5, default: 5, format: "|:slider| %.1f")
+            gender = prompt.select("Is it a male or female?", %w(Male Female))
+            notes = prompt.ask("Please enter anything we should know about your doggo:")
+
+            doggo = Dog.create(name: dog_name, breed: breed, age: age, gender: gender, notes: notes, owner_id: self.id)
+        end
+    end
+
+
     def request_walk
         prompt= TTY::Prompt.new
 

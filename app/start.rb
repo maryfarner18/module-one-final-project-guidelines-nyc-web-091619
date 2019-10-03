@@ -35,16 +35,17 @@ def startup
             name = prompt.ask("Please enter your full name:")#{|q| q.validate /\S\z/, 'Please enter a valid username(Spaces are not allowed)'}
             address = prompt.ask("Please enter your address:")#{|q| q.validate /\S\z/, 'Please enter a valid username(Spaces are not allowed)'}
             owner = Owner.create(name: name, address: address, user_id: user.id)
+            owner.add_dogs
 
-            while prompt.select("Do you have a dog to add?", %w(Yes No)) == "Yes"
-                dog_name = prompt.ask("Please enter your dog's name:")
-                breed = prompt.ask("Please enter your dog's breed:")
-                age = prompt.slider("Please enter your dog's age:", max:25, step: 0.5, default: 5, format: "|:slider| %.1f")
-                gender = prompt.select("Is it a male or female?", %w(Male Female))
-                notes = prompt.ask("Please enter anything we should know about your doggo:")
+            # while prompt.select("Do you have a dog to add?", %w(Yes No)) == "Yes"
+            #     dog_name = prompt.ask("Please enter your dog's name:")
+            #     breed = prompt.ask("Please enter your dog's breed:")
+            #     age = prompt.slider("Please enter your dog's age:", max:25, step: 0.5, default: 5, format: "|:slider| %.1f")
+            #     gender = prompt.select("Is it a male or female?", %w(Male Female))
+            #     notes = prompt.ask("Please enter anything we should know about your doggo:")
 
-                doggo = Dog.create(name: dog_name, breed: breed, age: age, gender: gender, notes: notes, owner_id: owner.id)
-            end
+            #     doggo = Dog.create(name: dog_name, breed: breed, age: age, gender: gender, notes: notes, owner_id: owner.id)
+            # end
 
             puts "All set, logging in!"
             user.run_owner

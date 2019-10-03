@@ -11,6 +11,20 @@ class User < ActiveRecord::Base
         owner = Owner.find_by(user_id: self.id)
         system "clear"
         puts "Welcome, #{owner.name}!"
+        
+        if owner.dogs == []
+            puts "Sorry you don't have any doggos!"
+            add = prompt.select("Do you want to add a dog?", %w(Yes No))
+            if add
+                owner.add_dogs
+                run_owner
+            else
+                puts "Ok, bye bye then!"
+                prompt.ask("Hit enter when done")
+                exit_app
+            end
+        end
+
     
         ####LOOP TILL THEY CHOOSE TO EXIT! ##############
         # loop do 
