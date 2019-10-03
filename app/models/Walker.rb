@@ -32,7 +32,7 @@ class Walker < ActiveRecord::Base
     def start_walk
         prompt= TTY::Prompt.new
 
-        upcoming = self.upcoming_walks
+        upcoming = self.todays_walks
         if upcoming != "No upcoming walks!"
             walk_to_update = prompt.select("Which of the walks you want to start?", upcoming << "Go Back")
             if walk_to_update == "Go Back"
@@ -68,10 +68,12 @@ class Walker < ActiveRecord::Base
 
             User.destroy(self.user_id)
             Walker.destroy(self.id)
-            puts "Uh Oh! Due to you low rating, #{self.name} has been fired!!!"
+            animation('ashameddog', 1, 1, 0.05, 10, "")
+            puts "Your walk has been rated!"
             #play "embarassing"
             `afplay ./app/audio/embarassing.m4a`
-            animation('ashameddog', 1, 1, 0.05, 10, "")
+            puts "Uh Oh! Due to you low rating, #{self.name} has been fired!!!"
+            #play "embarassing" again
             `afplay ./app/audio/embarassing.m4a`
         end
     end
@@ -93,6 +95,15 @@ class Walker < ActiveRecord::Base
             puts "Sorry, you don’t have any active walks!!!"
             prompt.ask("Hit enter when done")
             return false
+        end
+    end
+
+    def todays_walks
+        upcoming = self.walks.select{|walk| walk.status == "Upcoming" && walk.date_and_time < Time.now.utc + 86400}
+        if( upcoming == nil)
+            "No upcoming walks!"
+        else
+            pretty_walks(upcoming).split("\n")
         end
     end
 

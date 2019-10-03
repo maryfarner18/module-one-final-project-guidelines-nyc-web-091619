@@ -75,14 +75,13 @@ class Owner < ActiveRecord::Base
             rating = prompt.ask("Great, what would you like to rate this walk? (1-5)"){|q| q.validate /[1-5].?[0-9]?[0-9]?\z/, 'Please enter a valid rating between 1 and 5'}
             walk.update(rating: rating)
 
-            puts "Your walks has been rated!"
             #play "rate sound"
             `afplay ./app/audio/rate.mp3`
+            puts "Your walk has been rated!"
 
-    
             #update the walker's rating
             Walker.find(walk.walker_id).update_avg_rating(rating)
-
+            return true
         else
             puts "Sorry, you have no past walks to rate!"
             prompt.ask("Hit enter when done")
