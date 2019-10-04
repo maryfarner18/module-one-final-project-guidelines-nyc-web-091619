@@ -44,7 +44,6 @@ class User < ActiveRecord::Base
             ####LOOP TILL THEY CHOOSE TO EXIT! ##############
             options = ["See My Dogs", "Request a Walk", "See Upcoming Walks", "Rate a Walk", "See Past Walks", "Cancel a Walk", "See Walks Currently In Progress", "Add a Dog", "Exit"]
             action = prompt.select("What would you like to do?", options, per_page: 10)
-            system "clear"
 
             case action
             when options[0] #see dogs
