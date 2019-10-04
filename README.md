@@ -42,7 +42,7 @@ git clone https://github.com/maryfarner18/module-one-final-project-guidelines-ny
 
 And then execute:
 
-    $ bundle
+    $ bundle install
 
 
 

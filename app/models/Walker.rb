@@ -39,7 +39,6 @@ class Walker < ActiveRecord::Base
     def start_walk
         prompt= TTY::Prompt.new
 
-        binding.pry
         # Make sure no walk is already in progress
         if self.current_walk != "No walk in progress!"
             puts "Sorry, you already have a walk in progress! Finish that one first!"
