@@ -5,16 +5,4 @@ class Dog < ActiveRecord::Base
     has_many :walks
     has_many :walkers, through: :walks
 
-    #owner
-    #walkers
-    #walks
-    #find_by ()
-
-    def upcoming_walks
-
-    end
-
-    def past_walks
-
-    end
 end

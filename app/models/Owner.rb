@@ -4,11 +4,12 @@ class Owner < ActiveRecord::Base
     has_many :dogs
     has_one :user
 
-    def add_dogs
+    def add_dogs #Adds dogs to an Owner
         
         prompt= TTY::Prompt.new
         puts "Add a Dog:\n"
 
+        #Loop until user says no more dogs to add
         loop do  
             dog_name = prompt.ask("Please enter your dog's name:")
             breed = prompt.ask("Please enter your dog's breed:")
@@ -24,17 +25,21 @@ class Owner < ActiveRecord::Base
                 break
             end
         end
-    end
+    end #END ADD_DOGS
 
 
-    def request_walk
+    def request_walk #Request a new walk at a given time and date for some dog
+        
         prompt= TTY::Prompt.new
 
         dog_name = prompt.select('Which of your dogs needs a walk?', pretty_dogs(self.dogs) << "Go Back", per_page: 10)
+        
+        #Exit out if user changes their mind
         if dog_name == "Go Back"
             return false
         end
     
+        #Get this dog, and create the walk 
         dog = self.dogs.find_by(name: dog_name)
         date = prompt.ask("What date? (YYYY-MM-DD)"){|q| q.validate /\d{4}-[0-1][0-2]-[0-3][0-9]\z/, 'Please enter a valid date'}
         time = prompt.ask("What time? (HH:MM)"){|q| q.validate /[01][0-9]:[0-5][0-9]\z/, 'Please enter a valid time'}
@@ -51,6 +56,7 @@ class Owner < ActiveRecord::Base
         new_walk
     end
 
+     #List all of an owner's dogs
     def see_my_dogs
         # animation('doggo', 1, 1, 0.02, 10,"")
         puts "Your doggos:\n"
@@ -58,10 +64,14 @@ class Owner < ActiveRecord::Base
     end
 
     ## UPDATING WALKS -------------------------------
+
+    #Rates a given walk && calls on the method to update the walker's rating
     def rate_walk
         prompt= TTY::Prompt.new
 
+        #Get list of past walks 
         past = self.past_walks 
+
         if past != "No past walks!"
             
             response = prompt.select('Which walk would you like to rate?', past << "Go Back", per_page: 10)
@@ -69,8 +79,8 @@ class Owner < ActiveRecord::Base
                 return false
             end
 
+            #find the walk and update it
             walk_id = response.split(/[#:]/)[1].to_i
-
             walk = Walk.find(walk_id)
             rating = prompt.ask("Great, what would you like to rate this walk? (1-5)"){|q| q.validate /[1-5].?[0-9]?[0-9]?\z/, 'Please enter a valid rating between 1 and 5'}
             walk.update(rating: rating)
@@ -81,7 +91,10 @@ class Owner < ActiveRecord::Base
 
             #update the walker's rating
             Walker.find(walk.walker_id).update_avg_rating(rating)
-            return true
+            
+            return true #Success
+        
+        #Else if there are no past walks, return!
         else
             puts "Sorry, you have no past walks to rate!"
             prompt.ask("Hit enter when done")
@@ -89,19 +102,30 @@ class Owner < ActiveRecord::Base
         end
     end
 
+    #Cancels an upcoming walk
     def cancel_walk
+        
         prompt= TTY::Prompt.new
 
+        #Find upcoming walks and list as options to cancel
         upcoming = self.upcoming_walks
         if upcoming != "No upcoming walks!"
+
             walk_to_cancel = prompt.select("Which of the walks you want to cancel?", upcoming << "Go Back", per_page: 10)
+            
+            #Exit if user changes their mind
             if walk_to_cancel == "Go Back"
                 return false
             end
+
+            #Find and cancel the walk
             id = walk_to_cancel.split(/[#:]/)[1].to_i
             Walk.find(id).update(status: "Cancelled")
             puts "Great, your walk for #{Walk.find(id).dog.name} was cancelled!"
-            return true
+
+            return true # Success
+
+        #Else if there are not upcoming walks, exit
         else
             puts "Sorry, you don’t have any upcoming walks!!!"
             prompt.ask("Hit enter when done")
@@ -110,9 +134,12 @@ class Owner < ActiveRecord::Base
     end
 
     ### GETTING WALK INFO ------------------------------------##
+
+    # A generic "walk getter" that retrieves walks by status
     def walks(status)
+
         case status
-        when "All"
+        when "All" 
             self.dogs.map {|dog| dog.walks}.flatten
 
         when "Upcoming"
@@ -133,6 +160,7 @@ class Owner < ActiveRecord::Base
         end
     end
 
+    # Prints the walks in progress
     def walks_in_progress
         in_prog = walks("In Progress")
         if( in_prog == nil)
@@ -143,6 +171,7 @@ class Owner < ActiveRecord::Base
         end
     end
 
+    # Prints the upcoming walks
     def upcoming_walks
         upcoming = walks("Upcoming")
         if( upcoming == [])
@@ -152,6 +181,7 @@ class Owner < ActiveRecord::Base
         end
     end
 
+    # Prints the past walks
     def past_walks
         past = walks("Past")
         if(past == [])

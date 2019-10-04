@@ -7,7 +7,7 @@ class User < ActiveRecord::Base
     def run_owner
         
         owner = Owner.find_by(user_id: self.id)
-        message = "\t\t\t\t\t\t\tWelcome, #{owner.name}!\n"
+        message = "\t\t\t\t\t\t\t\tWelcome, #{owner.name}!\n"
          #SOME NOISE
         animation('walkingdog', 3, 10, 0.05, 10, message)
         puts "\n"
@@ -20,7 +20,7 @@ class User < ActiveRecord::Base
         reload
         prompt= TTY::Prompt.new
         owner = Owner.find_by(user_id: self.id)
-        message = "\t\t\t\t\t\t\tWelcome, #{owner.name}!\n"
+        message = "\t\t\t\t\t\t\t\tWelcome, #{owner.name}!\n"
         animation('walkingdog', 1, 1, 0.05, 10, message)
        
 
@@ -107,7 +107,7 @@ class User < ActiveRecord::Base
     def run_walker
         reload
         walker = Walker.find_by(user_id: self.id)
-        message = "\t\t\t\t\t\t\tWelcome, #{walker.name}!\n"
+        message = "\t\t\t\t\t\t\t\tWelcome, #{walker.name}!\n"
          #SOME NOISE
         animation('walkingdog', 3, 10, 0.05, 10, message)
         puts "\n"
@@ -121,7 +121,7 @@ class User < ActiveRecord::Base
         prompt= TTY::Prompt.new
         walker = Walker.find_by(user_id: self.id)
 
-        message = "\t\t\t\t\t\t\tWelcome, #{walker.name}!\n"
+        message = "\t\t\t\t\t\t\t\tWelcome, #{walker.name}!\n"
         animation('walkingdog', 1, 1, 0.05, 10, message)
             
         options = ["See Current Walk", "See Upcoming Walks", "Start a Walk", "End a Walk", "Cancel A Walk", "See Past Walks", "Exit"]
